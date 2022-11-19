@@ -11,13 +11,14 @@ public class Main {
             printScreen();
             input = sc.nextInt();
             if (input == 1) {
-                listInstances();
+                EC2Manager.listInstances();
+            } else if (input == 2) {
+                EC2Manager.listZones();
+            } else if (input == 4) {
+                EC2Manager.listRegions();
             }
-            else if (input == 4){
-                listRegions();
-            }
-        }
 
+        }
     }
 
     public static void init(){
@@ -41,13 +42,5 @@ public class Main {
         }
         System.out.println("----------------------------------------");
         System.out.print("input : ");
-    }
-
-    public static void listInstances(){
-        EC2Manager.listInstances();
-    }
-
-    public static void listRegions(){
-        EC2Manager.listRegions();
     }
 }
