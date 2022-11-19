@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Main {
     static Map<Integer, String> functions = new TreeMap<>();
-    static InstanceManager instanceManager = new InstanceManager();
+    static EC2Manager EC2Manager = new EC2Manager();
     public static void main(String[] args) {
         init();
         int input = 0;
@@ -12,6 +12,9 @@ public class Main {
             input = sc.nextInt();
             if (input == 1) {
                 listInstances();
+            }
+            else if (input == 4){
+                listRegions();
             }
         }
 
@@ -41,6 +44,10 @@ public class Main {
     }
 
     public static void listInstances(){
-        instanceManager.listInstances();
+        EC2Manager.listInstances();
+    }
+
+    public static void listRegions(){
+        EC2Manager.listRegions();
     }
 }

@@ -1,11 +1,8 @@
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.*;
 
-public class InstanceManager {
+public class EC2Manager {
     final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
 
     public void listInstances(){
@@ -26,7 +23,22 @@ public class InstanceManager {
                 "[ID]  " + id
                 +" [TYPE]  " + type
                 +" [STATE]  " + state
+        );
+    }
 
+    public void listRegions(){
+        DescribeRegionsResult regionsResult = ec2.describeRegions();
+        for (Region region : regionsResult.getRegions()) {
+            printRegionInfo(region);
+        }
+    }
+
+    public void printRegionInfo(Region region){
+        String regionName = region.getRegionName();
+        String endPoint = region.getEndpoint();
+        System.out.println(
+                "[REGION]   " + regionName
+                +"  [ENDPOINT]   " + endPoint
         );
     }
 }
