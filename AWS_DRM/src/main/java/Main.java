@@ -3,44 +3,78 @@ import java.util.*;
 public class Main {
     static Map<Integer, String> functions = new TreeMap<>();
     static EC2Manager EC2Manager = new EC2Manager();
+    static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
-        init();
         int input = 0;
-        Scanner sc = new Scanner(System.in);
-        while(input != 99){
+        while(true){
             printScreen();
-            input = sc.nextInt();
-            if (input == 1) {
-                EC2Manager.listInstances();
-            } else if (input == 2) {
-                EC2Manager.listZones();
-            } else if (input == 4) {
-                EC2Manager.listRegions();
+            if(sc.hasNextInt()){
+                input = sc.nextInt();
             }
 
-        }
-    }
+            switch (input) {
+                case 1:
+                    listInstance();
+                    break;
+                case 2:
+                    availableRegions();
+                    break;
+                case 4:
+                    availableZones();
+                    break;
+                case 7:
+                    rebootInstance();
+                    break;
+                case 99:
+                    System.out.println("Bye");
+                    sc.close();
+                    return;
 
-    public static void init(){
-        functions.put(1, "list instance");
-        functions.put(2, "available zones");
-        functions.put(3, "start instance");
-        functions.put(4, "available regions");
-        functions.put(5, "stop instance");
-        functions.put(6, "create instance");
-        functions.put(7, "reboot instance");
-        functions.put(8, "list images");
-        functions.put(99, "quit");
+            }
+        }
     }
 
     public static void printScreen(){
-        Iterator<Map.Entry<Integer, String>> entryIterator = functions.entrySet().iterator();
-        System.out.println("----------------------------------------");
-        while (entryIterator.hasNext()){
-            Map.Entry<Integer, String> function = entryIterator.next();
-            System.out.println(function.getKey() + ". " + function.getValue());
+        System.out.println("                                                            ");
+        System.out.println("                                                            ");
+        System.out.println("------------------------------------------------------------");
+        System.out.println("           Amazon AWS Control Panel using SDK               ");
+        System.out.println("------------------------------------------------------------");
+        System.out.println("  1. list instance                2. available zones        ");
+        System.out.println("  3. start instance               4. available regions      ");
+        System.out.println("  5. stop instance                6. create instance        ");
+        System.out.println("  7. reboot instance              8. list images            ");
+        System.out.println("                                 99. quit                   ");
+        System.out.println("------------------------------------------------------------");
+        System.out.print("Enter an integer : ");
+    }
+
+    public static void listInstance(){
+        System.out.println("Listing instance...");
+        EC2Manager.listInstances();
+    }
+
+    public static void availableRegions(){
+        System.out.println("Available regions...");
+        EC2Manager.listRegions();
+    }
+
+    public static void availableZones(){
+        System.out.println("Available zones...");
+        EC2Manager.listZones();
+
+    }
+
+    public static void rebootInstance(){
+        String instanceID = "";
+        System.out.print("Enter instance id : ");
+        if(sc.hasNext()){
+            instanceID = sc.nextLine();
         }
-        System.out.println("----------------------------------------");
-        System.out.print("input : ");
+        if(!instanceID.isBlank()){
+            EC2Manager.rebootInstance(instanceID);
+        }
+
+
     }
 }
