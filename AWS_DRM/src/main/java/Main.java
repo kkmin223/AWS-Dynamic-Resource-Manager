@@ -19,17 +19,30 @@ public class Main {
                 case 2:
                     availableRegions();
                     break;
+                case 3:
+                    startInstance();
+                    break;
                 case 4:
                     availableZones();
                     break;
+                case 5:
+                    stopInstance();
+                    break;
+                case 6:
+                    createInstance();
+                    break;
                 case 7:
                     rebootInstance();
+                    break;
+                case 8:
+                    listImages();
                     break;
                 case 99:
                     System.out.println("Bye");
                     sc.close();
                     return;
-
+                default:
+                    System.out.println("concentration!");
             }
         }
     }
@@ -65,6 +78,29 @@ public class Main {
 
     }
 
+    public static void startInstance(){
+        String instanceID = "";
+        System.out.print("Enter instance id : ");
+        if(sc.hasNext()){
+            instanceID = sc.nextLine();
+        }
+        if(!instanceID.isBlank()){
+            EC2Manager.startInstance(instanceID);
+        }
+
+    }
+
+    public static void stopInstance(){
+        String instanceID = "";
+        System.out.print("Enter instance id : ");
+        if(sc.hasNext()){
+            instanceID = sc.nextLine();
+        }
+        if(!instanceID.isBlank()){
+            EC2Manager.stopInstance(instanceID);
+        }
+    }
+
     public static void rebootInstance(){
         String instanceID = "";
         System.out.print("Enter instance id : ");
@@ -74,7 +110,22 @@ public class Main {
         if(!instanceID.isBlank()){
             EC2Manager.rebootInstance(instanceID);
         }
+    }
 
+    public static void listImages(){
+        System.out.println("Listing Images...");
+        EC2Manager.listImages();
+    }
+
+    public static void createInstance(){
+        String amiId = "";
+        System.out.print("Enter ami id : ");
+        if(sc.hasNext()){
+            amiId = sc.nextLine();
+        }
+        if(!amiId.isBlank()){
+            EC2Manager.createInstance(amiId);
+        }
 
     }
 }
