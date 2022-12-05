@@ -214,4 +214,5 @@ public class EC2Manager {
         String owner = image.getOwnerId();
         System.out.printf("[ImageID] %s [Name] %s [Owner] %s\n", imageId, name, owner);
     }
+
 }

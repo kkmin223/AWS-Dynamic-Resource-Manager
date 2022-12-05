@@ -4,6 +4,7 @@ public class Main {
     static Map<Integer, String> functions = new TreeMap<>();
     static EC2Manager EC2Manager = new EC2Manager();
     static Scanner sc = new Scanner(System.in);
+    static ConnectEC2 connectEC2 = new ConnectEC2();
     public static void main(String[] args) {
         int input = 0;
         while(true){
@@ -37,6 +38,9 @@ public class Main {
                 case 8:
                     listImages();
                     break;
+                case 9:
+                    condorStatus();
+                    break;
                 case 99:
                     System.out.println("Bye");
                     sc.close();
@@ -57,6 +61,7 @@ public class Main {
         System.out.println("  3. start instance               4. available regions      ");
         System.out.println("  5. stop instance                6. create instance        ");
         System.out.println("  7. reboot instance              8. list images            ");
+        System.out.println("  9. condor status                8. list images            ");
         System.out.println("                                 99. quit                   ");
         System.out.println("------------------------------------------------------------");
         System.out.print("Enter an integer : ");
@@ -126,6 +131,9 @@ public class Main {
         if(!amiId.isBlank()){
             EC2Manager.createInstance(amiId);
         }
+    }
 
+    public static void condorStatus(){
+        connectEC2.condorStatus();
     }
 }
