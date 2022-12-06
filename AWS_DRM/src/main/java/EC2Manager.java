@@ -4,9 +4,14 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class EC2Manager {
     final AmazonEC2 ec2;
-
+    static List<Instance> instanceList;
+    static List<SecurityGroup> securityGroupList;
     public EC2Manager(){
         ProfileCredentialsProvider credentialsProvider = new ProfileCredentialsProvider();
         try {
@@ -35,6 +40,7 @@ public class EC2Manager {
                 DescribeInstancesResult response = ec2.describeInstances(request);
 
                 for (Reservation reservation : response.getReservations()) {
+                    instanceList = reservation.getInstances();
                     for (Instance instance : reservation.getInstances()) {
                         printInstanceInfo(instance);
                     }
@@ -61,8 +67,11 @@ public class EC2Manager {
             String type = instance.getInstanceType();
             String state = instance.getState().getName();
             String monitorState = instance.getMonitoring().getState();
-
+            List<GroupIdentifier> securityGroups = instance.getSecurityGroups();
             System.out.printf("[id] %s, [AMI] %s, [type] %s, [state] %10s, [monitoring state] %s\n",id, imageId, type, state, monitorState);
+            for(GroupIdentifier securityGroup : securityGroups){
+                System.out.printf("[securityGroup Name] %s \n", securityGroup.getGroupName());
+            }
         } catch (Exception e){
             System.out.println("[Exception] " + e.toString());
         }
@@ -191,7 +200,6 @@ public class EC2Manager {
 
     public void createInstance(String ami_id) {
         final AmazonEC2 ec2 = AmazonEC2ClientBuilder.defaultClient();
-
         RunInstancesRequest run_request = new RunInstancesRequest()
                 .withImageId(ami_id)
                 .withInstanceType(InstanceType.T2Micro)
@@ -213,6 +221,25 @@ public class EC2Manager {
         String name = image.getName();
         String owner = image.getOwnerId();
         System.out.printf("[ImageID] %s [Name] %s [Owner] %s\n", imageId, name, owner);
+    }
+
+    public void listSecurityGroups(){
+        DescribeSecurityGroupsResult securityGroups = ec2.describeSecurityGroups();
+        securityGroupList = securityGroups.getSecurityGroups();
+        for (SecurityGroup securityGroup : securityGroups.getSecurityGroups()){
+            printSecurityGroup(securityGroup);
+        }
+    }
+
+    public void printSecurityGroup(SecurityGroup securityGroup) {
+        String groupId = securityGroup.getGroupId();
+        String groupName = securityGroup.getGroupName();
+        List<IpPermission> ipPermissions = securityGroup.getIpPermissions();
+        System.out.printf("[GroupID] %s [GroupName] %s \n", groupId, groupName);
+        for(IpPermission ip : ipPermissions){
+            System.out.printf("[IP Protocol] %s [From Port] %d [To Port] %d \n",ip.getIpProtocol(), ip.getFromPort(), ip.getToPort());
+        }
+
     }
 
 }
